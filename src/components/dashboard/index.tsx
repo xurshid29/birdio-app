@@ -4,12 +4,14 @@ import Board from "./board";
 import useScrollableTasks from "../../hooks/use-scrollable-tasks";
 
 const Dashboard: React.FC = () => {
-  const { scrollRef, data, days } = useScrollableTasks(defaultDayRange);
+  const { scrollRef, data, days, updateQuery } =
+    useScrollableTasks(defaultDayRange);
   return (
     <Board
       scrollRef={scrollRef}
       days={days}
       tasks={data?.scheduledTasks || []}
+      updateQuery={updateQuery}
     />
   );
 };

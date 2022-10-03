@@ -18,7 +18,7 @@ export type Project = {
 };
 
 export type Task = {
-  id: string;
+  id: number;
   name: string;
   description?: string;
   status: string;
@@ -34,3 +34,11 @@ export type ScheduledTasksArgs = {
 };
 
 export type ScheduledTasksData = { scheduledTasks: Task[] };
+
+export type UpdateTaskInput = {
+  name?: string;
+  description?: string;
+  startDate?: Date;
+  startTime?: Date;
+  projectId?: number;
+};

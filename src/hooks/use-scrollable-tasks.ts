@@ -11,6 +11,7 @@ import {
 } from "../utils";
 import { gql, useQuery } from "@apollo/client";
 import { ScheduledTasksArgs, ScheduledTasksData } from "../types";
+import { ObservableQuery } from "@apollo/client/core/ObservableQuery";
 
 const ALL_TASK = gql`
   query scheduledTasks(
@@ -53,22 +54,26 @@ const useScrollableTasks = (
   scrollRef: InfiniteScrollRef<HTMLDivElement>;
   days: Dayjs[];
   data: ScheduledTasksData | undefined;
+  updateQuery: ObservableQuery<
+    ScheduledTasksData,
+    ScheduledTasksArgs
+  >["updateQuery"];
 } => {
   const [days, setDays] = useState<Dayjs[]>(defaultDays);
-  const { data, fetchMore } = useQuery<ScheduledTasksData, ScheduledTasksArgs>(
-    ALL_TASK,
-    {
-      notifyOnNetworkStatusChange: true,
-      fetchPolicy: "network-only",
-      variables: {
-        startDate: defaultDays[0].format("YYYY-MM-DD 00:00:00"),
-        endDate: defaultDays[defaultDays.length - 1].format(
-          "YYYY-MM-DD 23:59:59",
-        ),
-        projectId,
-      } as ScheduledTasksArgs,
-    },
-  );
+  const { data, fetchMore, updateQuery } = useQuery<
+    ScheduledTasksData,
+    ScheduledTasksArgs
+  >(ALL_TASK, {
+    notifyOnNetworkStatusChange: true,
+    fetchPolicy: "network-only",
+    variables: {
+      startDate: defaultDays[0].format("YYYY-MM-DD 00:00:00"),
+      endDate: defaultDays[defaultDays.length - 1].format(
+        "YYYY-MM-DD 23:59:59",
+      ),
+      projectId,
+    } as ScheduledTasksArgs,
+  });
 
   const scrollRef = useInfiniteScroll<HTMLDivElement>({
     next: async (direction) => {
@@ -101,6 +106,7 @@ const useScrollableTasks = (
     scrollRef,
     days,
     data,
+    updateQuery,
   };
 };
 
